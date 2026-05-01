@@ -9,9 +9,7 @@ description: "Fixing odoc documentation warnings and errors. Use when running du
 
 Use this skill when fixing odoc documentation warnings, typically from `dune build @doc`.
 
-**Prerequisites:** This skill covers odoc v3 syntax which is not yet in released versions of dune or odoc. You need:
-- dune pinned to https://github.com/jonludlam/dune/tree/odoc-v3-rules-3.21
-- odoc pinned to https://github.com/jonludlam/odoc/tree/staging
+**Prerequisites:** This skill focuses on odoc v3 reference syntax. This requires recently released versions of odoc and dune.
 
 ## Reference Syntax
 
