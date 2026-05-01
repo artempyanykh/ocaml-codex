@@ -1,0 +1,20 @@
+{
+  "name": "ocaml-dev",
+  "version": "0.1.0",
+  "description": "Codex skills for OCaml, Dune, Eio, OxCaml, testing, documentation, security hardening, and release workflows.",
+  "author": {
+    "name": "Artem Pianykh",
+    "url": "https://github.com/artempyanykh"
+  },
+  "contributors": [
+    {
+      "name": "Anil Madhavapeddy",
+      "url": "https://github.com/avsm",
+      "role": "Original author of the upstream OCaml Claude Code skills"
+    }
+  ],
+  "homepage": "https://github.com/avsm/ocaml-claude-marketplace/tree/main/plugins/ocaml-dev",
+  "repository": "https://github.com/artempyanykh/ocaml-codex",
+  "license": "ISC",
+  "skills": "./skills/"
+}

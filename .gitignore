@@ -1,0 +1,43 @@
+# Local Codex/runtime scratch files
+.codex
+.codex/
+
+# OS and editor metadata
+.DS_Store
+Thumbs.db
+*~
+*.swp
+*.swo
+.vscode/
+.idea/
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+.cache/
+tmp/
+temp/
+
+# OCaml and Dune build artifacts
+_build/
+_opam/
+*.install
+*.merlin
+.merlin
+
+# Coverage, profiling, and test output
+_coverage/
+bisect*.coverage
+*.prof
+*.profraw
+*.profdata
+
+# JavaScript/package-manager output from release-template testing
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+dist/
+coverage/
