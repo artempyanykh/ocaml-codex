@@ -5,7 +5,9 @@ description: Working with OxCaml extensions to OCaml. Use when the oxcaml compil
 
 # OxCaml Development
 
-Use this skill when the project is compiled with OxCaml or explicitly opts into Jane Street OCaml extensions. Assume standard OCaml knowledge and load only the reference file needed for the feature being used.
+Use this skill when the project is compiled with OxCaml or explicitly opts into
+Jane Street OCaml extensions. Assume standard OCaml knowledge and load only the
+reference files for the features being used.
 
 ## Reference Selection
 
