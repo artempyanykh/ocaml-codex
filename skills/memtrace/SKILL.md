@@ -49,7 +49,7 @@ For Alcotest test suites:
 ```ocaml
 (* test/test.ml *)
 let () =
-  Memtrace.trace_if_requested ();
+  Memtrace.trace_if_requested ~context:"test suite" ();
   Alcotest.run "suite-name" [
     Test_foo.suite;
     Test_bar.suite;
@@ -60,6 +60,7 @@ Rules:
 - Call once, at program start
 - No `~context` argument needed for simple cases
 - Never enable tracing unconditionally
+- `MEMTRACE_RATE` controls sampling; keep the same rate when comparing runs
 
 ---
 
@@ -104,10 +105,10 @@ MEMTRACE=trace.ctf dune exec -- test/test.exe test "binary" 68
 dune exec -- test/test.exe test list
 ```
 
-The trace file (`.ctf`) is binary but contains embedded strings showing:
-- Source file paths and line numbers
-- Function names and call stacks
-- Allocation counts and sizes
+When `MEMTRACE` is set, `Memtrace.trace_if_requested` writes a binary trace to
+that path until the process exits. The trace can then be analysed with viewer or
+CLI tools to recover source locations, call stacks, allocation sizes, and
+estimated allocation volume.
 
 ---
 
@@ -127,14 +128,14 @@ opam install memtrace-hotspot
 memtrace-hotspot trace.ctf
 ```
 
-**Reading raw trace output:**
+**Interpreting analysis output:**
 
-The MEMTRACE environment produces summary output showing:
+Memtrace itself writes the trace file; analysis tools produce summaries showing:
 - Total allocations in bytes
 - Top allocation sites by percentage
 - Call stacks leading to allocations
 
-Example output:
+Example summary:
 ```
 76.3 MB total allocations
   30.2% lib/binary.ml:194 Bytes.get_int32_be
