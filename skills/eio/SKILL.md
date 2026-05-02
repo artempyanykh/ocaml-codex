@@ -268,72 +268,18 @@ For tests, hide backend details:
 Eio.Exn.Backend.show := false
 ```
 
-## Testing with Eio_mock
+## Testing
 
-Library: `eio.mock` (not `eio_mock`)
+For Eio_mock setup patterns, mock flows, chunked reads, mock networks, and
+deadlock detection, load `references/testing.md`.
 
-### Test Setup Pattern
+Essentials:
 
-```ocaml
-let setup_test f () =
-  Mirage_crypto_rng_unix.use_default ();  (* or initialize RNG *)
-  Eio_main.run @@ fun env ->
-  Eio.Switch.run @@ fun sw ->
-  let fs = Eio.Stdenv.fs env in
-  let tmp = Eio.Path.(fs / Filename.get_temp_dir_name () / "test-dir") in
-  (try Eio.Path.rmtree tmp with _ -> ());
-  Eio.Path.mkdirs ~exists_ok:true ~perm:0o755 tmp;
-  Fun.protect
-    ~finally:(fun () -> try Eio.Path.rmtree tmp with _ -> ())
-    (fun () -> f ~sw tmp)
-
-let test_something = setup_test @@ fun ~sw tmp ->
-  (* test code here *)
-```
-
-### Mock Flow
-
-```ocaml
-let test_api_call () =
-  Eio_main.run @@ fun _env ->
-  let flow = Eio_mock.Flow.make "response" in
-  (* IMPORTANT: Always end with `Raise End_of_file *)
-  Eio_mock.Flow.on_read flow [
-    `Return "{\"ok\": true}";
-    `Raise End_of_file;
-  ];
-  (* use flow *)
-```
-
-### Simulating Chunked Data
-
-```ocaml
-let test_partial_reads () =
-  Eio_main.run @@ fun _env ->
-  let flow = Eio_mock.Flow.make "chunked" in
-  Eio_mock.Flow.on_read flow [
-    `Return "\x00\x01";      (* First 2 bytes *)
-    `Return "\x02\x03";      (* Next 2 bytes *)
-    `Raise End_of_file;
-  ];
-  (* Parser must handle values spanning chunks *)
-```
-
-### Mock Network
-
-```ocaml
-let test_network () =
-  Eio_main.run @@ fun _env ->
-  let net = Eio_mock.Net.make "mocknet" in
-  let flow = Eio_mock.Flow.make "conn" in
-  Eio_mock.Net.on_connect net [`Return flow];
-  Eio_mock.Flow.on_read flow [`Return "data"; `Raise End_of_file];
-  (* test network operations *)
-```
-
-### Deadlock Detection
-
-`Eio_mock.Backend.run` automatically detects deadlocks in tests.
+- The library is `eio.mock`, not `eio_mock`.
+- Always end mock reads with `` `Raise End_of_file``.
+- Initialise crypto RNG before tests that use crypto.
+- Hide backend-specific exception details in tests with
+  `Eio.Exn.Backend.show := false`.
 
 ## Good and Bad Examples
 
@@ -430,32 +376,6 @@ let connect addr =
       Error `Refused
   | Eio.Io _ as exn ->
       Eio.Exn.reraise_with_context exn "connecting to %s" addr
-```
-
-### Mock Testing
-
-**Bad**: Mock flow without End_of_file hangs forever
-```ocaml
-let test_read () =
-  Eio_main.run @@ fun _env ->
-  let flow = Eio_mock.Flow.make "test" in
-  Eio_mock.Flow.on_read flow [
-    `Return "data";
-    (* Missing End_of_file! Test hangs *)
-  ];
-  read_all flow
-```
-
-**Good**: Always end mock reads with End_of_file
-```ocaml
-let test_read () =
-  Eio_main.run @@ fun _env ->
-  let flow = Eio_mock.Flow.make "test" in
-  Eio_mock.Flow.on_read flow [
-    `Return "data";
-    `Raise End_of_file;  (* Required! *)
-  ];
-  read_all flow
 ```
 
 ### Cancellation Safety
