@@ -13,7 +13,7 @@
       "role": "Original author of the upstream OCaml Claude Code skills"
     }
   ],
-  "homepage": "https://github.com/avsm/ocaml-claude-marketplace/tree/main/plugins/ocaml-dev",
+  "homepage": "https://github.com/artempyanykh/ocaml-codex",
   "repository": "https://github.com/artempyanykh/ocaml-codex",
   "license": "ISC",
   "skills": "./skills/"
