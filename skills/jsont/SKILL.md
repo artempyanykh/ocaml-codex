@@ -182,9 +182,8 @@ let decode codec s = Jsont_bytesrw.decode_string codec s
 
 (* Encode OCaml value to JSON string *)
 let encode codec v =
-  match Jsont_bytesrw.encode_string codec v with
-  | Ok s -> s
-  | Error _ -> "{}"  (* fallback for encoding errors *)
+  Jsont_bytesrw.encode_string codec v
+(* Returns: (string, Jsont.Error.t) result *)
 
 (* Usage *)
 match Jsont_bytesrw.decode_string config_codec json_string with
@@ -203,10 +202,7 @@ Define module-level helpers for cleaner code:
 ```ocaml
 let decode codec s = Jsont_bytesrw.decode_string codec s
 
-let encode codec v =
-  match Jsont_bytesrw.encode_string codec v with
-  | Ok s -> s
-  | Error _ -> ""
+let encode codec v = Jsont_bytesrw.encode_string codec v
 ```
 
 ## Base Types Reference
