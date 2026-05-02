@@ -71,7 +71,8 @@ val to_json : t -> Yojson.Safe.t
 **Required**: `.ocamlformat` in project root.
 
 ```
-version = 0.28.1
+profile = default
+version = 0.29.0
 ```
 
 Run `dune fmt` before every commit.
