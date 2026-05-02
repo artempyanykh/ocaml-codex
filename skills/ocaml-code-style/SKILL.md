@@ -1,5 +1,5 @@
 ---
-name: code-style
+name: ocaml-code-style
 description: "OCaml coding style and refactoring patterns. Use when the user asks to tidy, clean up, refactor, or improve OCaml code, reviewing code quality, enforcing naming conventions, or reducing complexity."
 ---
 

@@ -54,7 +54,7 @@ let pp_status ppf = function
 ## Progress Bars
 
 Use the `progress` library for long-running operations. For reporter semantics,
-multi-line displays, byte counters, and Eio integration, load the **progress**
+multi-line displays, byte counters, and Eio integration, load the **ocaml-progress**
 skill.
 
 ```ocaml

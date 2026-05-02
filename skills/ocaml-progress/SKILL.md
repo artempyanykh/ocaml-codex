@@ -1,5 +1,5 @@
 ---
-name: progress
+name: ocaml-progress
 description: "Terminal progress bars and spinners using the OCaml progress library. Use when Codex needs to: (1) Add progress bars to long-running CLI operations, (2) Show download/upload progress with bytes and speed, (3) Create multi-line progress displays, (4) Integrate progress reporting with Eio concurrency"
 ---
 

@@ -213,7 +213,7 @@ Use these rules in the main cmdliner design:
   consumed by scripts.
 - Keep human output readable, but disable colours and progress bars when stdout
   is not a TTY.
-- Use `Fmt` for formatted output, `Logs_cli` for verbosity, and the **progress**
+- Use `Fmt` for formatted output, `Logs_cli` for verbosity, and the **ocaml-progress**
   skill for long-running operations.
 - Make errors actionable: state the invalid input, the affected argument, and a
   concrete hint.

@@ -1,5 +1,5 @@
 ---
-name: project-setup
+name: ocaml-project-setup
 description: "Standards for OCaml project metadata files. Use when initializing a new OCaml library/module, preparing for opam release, setting up CI, discussing project structure, or ensuring proper .mli/.ocamlformat files exist."
 ---
 
@@ -30,7 +30,7 @@ Private implementation modules may omit `.mli` files when the surrounding
 library interface already hides them.
 
 Keep module API design, documentation wording, naming, and refactoring guidance
-in the **ocaml** and **code-style** skills. This skill only defines the expected
+in the **ocaml** and **ocaml-code-style** skills. This skill only defines the expected
 project files and metadata.
 
 ## OCamlFormat Configuration

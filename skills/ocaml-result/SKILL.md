@@ -1,5 +1,5 @@
 ---
-name: result
+name: ocaml-result
 description: "OCaml Result type patterns using the stdlib. Use when Codex needs to: (1) Handle errors with Result types, (2) Chain Result operations with let* where the project baseline supports it, (3) Extract values from Ok/Error, (4) Refactor Result-heavy code without adding unnecessary local operators"
 ---
 

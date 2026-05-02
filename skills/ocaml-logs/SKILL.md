@@ -1,5 +1,5 @@
 ---
-name: logs
+name: ocaml-logs
 description: "OCaml Logs library patterns for structured logging. Use when Codex needs to: (1) Add logging to OCaml modules, (2) Create per-module log sources, (3) Use appropriate log levels, (4) Add structured tags to log messages"
 ---
 

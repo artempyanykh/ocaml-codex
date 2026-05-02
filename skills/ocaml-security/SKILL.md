@@ -1,5 +1,5 @@
 ---
-name: security
+name: ocaml-security
 description: "Security hardening for OCaml libraries through systematic vulnerability research. Use when Codex needs to: (1) Research CVEs in similar implementations (C, Rust, Go, Python) and add regression tests, (2) Add fuzz tests for parsers and encoders, (3) Audit integer handling and buffer operations, (4) Test boundary conditions and malformed input, (5) Review cryptographic usage, (6) Add defensive checks against common vulnerability classes"
 ---
 
@@ -129,7 +129,7 @@ let test_entity_expansion () =
 
 ### Phase 3: Fuzz Testing
 
-Add fuzz tests for all parsers and encoders. Use the **fuzz** skill for Crowbar
+Add fuzz tests for all parsers and encoders. Use the **ocaml-fuzz** skill for Crowbar
 project structure, generators, roundtrip patterns, and AFL campaign mechanics.
 This security phase only decides what needs fuzz coverage and why.
 
@@ -340,5 +340,5 @@ Before releasing any parser, encoder, or protocol handler:
 ## References
 
 - `references/vulnerability-classes.md` - Detailed patterns for each vulnerability class
-- **fuzz** skill - Comprehensive fuzz testing patterns
+- **ocaml-fuzz** skill - Comprehensive fuzz testing patterns
 - **ocaml-testing** skill - Unit test organization

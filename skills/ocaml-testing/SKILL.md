@@ -1,5 +1,5 @@
 ---
-name: testing
+name: ocaml-testing
 description: Testing strategies for OCaml libraries. Use when discussing tests, alcotest, eio mocks, test structure, or test-driven development in OCaml projects.
 ---
 
