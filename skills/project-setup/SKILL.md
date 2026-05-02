@@ -5,26 +5,29 @@ description: "Standards for OCaml project metadata files. Use when initializing 
 
 # OCaml Project Setup
 
-## Required Files
+## Recommended Files
 
-Every OCaml project needs:
+Most publishable OCaml libraries should have:
 
 | File | Purpose |
 |------|---------|
 | `dune-project` | Build configuration, opam generation |
-| `dune` (root) | Top-level build rules |
+| root `dune` | Optional top-level aliases/rules |
 | `.ocamlformat` | Code formatting (required) |
 | `.gitignore` | VCS ignores |
-| `LICENSE.md` | License file |
+| `LICENSE` or `LICENSE.md` | License file |
 | `README.md` | Project documentation |
-| CI config | GitHub Actions / GitLab CI / Tangled |
+| CI config | GitHub Actions, GitLab CI, Tangled, or project-local equivalent |
 
 ## Interface Files (.mli)
 
-Create an `.mli` file for each public library module:
+Create an `.mli` file for public library modules:
 - Clear API boundaries
 - Proper encapsulation
 - Documentation surface
+
+Private implementation modules may omit `.mli` files when the surrounding
+library interface already hides them.
 
 Keep module API design, documentation wording, naming, and refactoring guidance
 in the **ocaml** and **code-style** skills. This skill only defines the expected
@@ -43,7 +46,8 @@ Run `dune fmt` before every commit.
 
 ## License Headers
 
-Every source file starts with license header:
+Prefer SPDX headers in source files when the project requires per-file license
+metadata:
 
 ```ocaml
 (*---------------------------------------------------------------------------
@@ -60,12 +64,12 @@ project/
 ├── dune
 ├── .ocamlformat
 ├── .gitignore
-├── LICENSE.md
+├── LICENSE
 ├── README.md
 ├── lib/
 │   ├── dune
 │   ├── foo.ml
-│   └── foo.mli         # Required for every .ml
+│   └── foo.mli         # Public API boundary
 ├── bin/
 │   ├── dune
 │   └── main.ml
@@ -91,7 +95,7 @@ project/
 
 (maintainers "Name <email@example.com>")
 
-(source (tangled user.domain/project_name))
+(source (github user/project_name))
 
 (generate_opam_files true)
 
@@ -109,9 +113,9 @@ need. New projects can start from the current stable Dune language version, but
 existing projects should not bump this field without a reason.
 
 **Source options**:
-- `(source (tangled handle/repo))` - Tangled hosting (default for monopam)
 - `(source (github user/repo))` - GitHub hosting
 - `(source (gitlab user/repo))` - GitLab hosting
+- `(source (tangled handle/repo))` - Tangled hosting
 
 **Note**: Don't add `(version ...)` - added at release time.
 
@@ -124,7 +128,6 @@ For projects hosted on tangled.org, use the succinct source stanza:
 ```
 
 Examples:
-- `(source (tangled anil.recoil.org/ocaml-brotli))`
 - `(source (tangled user.example.org/my-library))`
 
 ## Tangled CI Configuration
@@ -167,13 +170,9 @@ steps:
     command: |
       opam init --disable-sandboxing -a -y
 
-  - name: repo
-    command: |
-      opam repo add aoah https://tangled.org/anil.recoil.org/aoah-opam-repo.git
-
   - name: deps
     command: |
-      opam install . --confirm-level=unsafe-yes --deps-only
+      opam install . --deps-only -y
 
   - name: build
     command: |
@@ -181,7 +180,7 @@ steps:
 
   - name: test
     command: |
-      opam install . --confirm-level=unsafe-yes --deps-only --with-test
+      opam install . --deps-only --with-test -y
       opam exec -- dune runtest --verbose
 ```
 
