@@ -21,50 +21,14 @@ Every OCaml project needs:
 
 ## Interface Files (.mli)
 
-**Every library module must have an `.mli` file** for:
+Create an `.mli` file for each public library module:
 - Clear API boundaries
 - Proper encapsulation
 - Documentation surface
 
-```ocaml
-(* lib/user.mli *)
-
-(** User management.
-
-    This module provides types and functions for user operations. *)
-
-type t
-(** A user. *)
-
-val create : name:string -> email:string -> t
-(** [create ~name ~email] creates a new user. *)
-
-val name : t -> string
-(** [name u] is the user's name. *)
-
-val pp : t Fmt.t
-(** [pp] is a pretty-printer for users. *)
-```
-
-**Documentation style**:
-- Functions: `[name args] is/does ...`
-- Values: `[name] is ...`
-- End with period
-
-## Standard Module Interface
-
-For modules with a central type `t`:
-
-```ocaml
-type t
-val v : ... -> t                           (* pure constructor *)
-val create : ... -> (t, Error.t) result    (* constructor with I/O *)
-val pp : t Fmt.t                           (* pretty-printer - required *)
-val equal : t -> t -> bool                 (* equality *)
-val compare : t -> t -> int                (* comparison *)
-val of_json : Yojson.Safe.t -> (t, string) result
-val to_json : t -> Yojson.Safe.t
-```
+Keep module API design, documentation wording, naming, and refactoring guidance
+in the **ocaml** and **code-style** skills. This skill only defines the expected
+project files and metadata.
 
 ## OCamlFormat Configuration
 
@@ -76,22 +40,6 @@ version = 0.29.0
 ```
 
 Run `dune fmt` before every commit.
-
-## Logging Setup
-
-Each module using logging should declare a source:
-
-```ocaml
-let log_src = Logs.Src.create "project.module"
-module Log = (val Logs.src_log log_src : Logs.LOG)
-```
-
-Log levels:
-- `Log.app` - Always shown (startup)
-- `Log.err` - Critical errors
-- `Log.warn` - Potential issues
-- `Log.info` - Informational
-- `Log.debug` - Verbose debugging
 
 ## License Headers
 
