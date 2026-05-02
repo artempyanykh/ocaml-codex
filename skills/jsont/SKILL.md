@@ -52,15 +52,22 @@ let config_codec =
   |> Jsont.Object.finish
 ```
 
-### Skip Unknown Fields
+### Unknown Fields
 
-Use `skip_unknown` before `finish` to ignore extra JSON fields (tolerant parsing):
+Object maps skip unknown JSON members by default. Use `error_unknown` only for
+closed schemas where extra fields should be rejected, and use `keep_unknown`
+when unknown members must be preserved.
 
 ```ocaml
 let tolerant_codec =
   Jsont.Object.map ~kind:"data" (fun id -> { id })
   |> Jsont.Object.mem "id" Jsont.string ~enc:(fun d -> d.id)
-  |> Jsont.Object.skip_unknown  (* ignore extra fields *)
+  |> Jsont.Object.finish
+
+let strict_codec =
+  Jsont.Object.map ~kind:"data" (fun id -> { id })
+  |> Jsont.Object.mem "id" Jsont.string ~enc:(fun d -> d.id)
+  |> Jsont.Object.error_unknown
   |> Jsont.Object.finish
 ```
 
@@ -110,10 +117,7 @@ let groups_codec = Jsont.Object.as_string_map (Jsont.list item_codec)
 For payloads that don't carry data:
 
 ```ocaml
-let empty_payload_codec : unit Jsont.t =
-  Jsont.Object.map ~kind:"empty" ()
-  |> Jsont.Object.skip_unknown
-  |> Jsont.Object.finish
+let empty_payload_codec : unit Jsont.t = Jsont.Object.zero
 ```
 
 ### Custom Value Mapping
@@ -242,23 +246,24 @@ let config_codec =
 
 ### Strict vs Tolerant Parsing
 
-**Bad**: Strict parsing breaks when API adds fields
+**Bad**: Rejecting unknown fields from an external API breaks when the API adds
+new fields.
 ```ocaml
 (* API adds "created_at" field, your code breaks *)
 let user_codec =
   Jsont.Object.map ~kind:"user" (fun id name -> { id; name })
   |> Jsont.Object.mem "id" Jsont.int ~enc:(fun u -> u.id)
   |> Jsont.Object.mem "name" Jsont.string ~enc:(fun u -> u.name)
-  |> Jsont.Object.finish  (* No skip_unknown! *)
+  |> Jsont.Object.error_unknown
+  |> Jsont.Object.finish
 ```
 
-**Good**: Tolerant parsing ignores unknown fields
+**Good**: The default object-map behaviour ignores unknown fields.
 ```ocaml
 let user_codec =
   Jsont.Object.map ~kind:"user" (fun id name -> { id; name })
   |> Jsont.Object.mem "id" Jsont.int ~enc:(fun u -> u.id)
   |> Jsont.Object.mem "name" Jsont.string ~enc:(fun u -> u.name)
-  |> Jsont.Object.skip_unknown  (* Ignore extra fields *)
   |> Jsont.Object.finish
 ```
 
@@ -336,7 +341,7 @@ let encode codec v =
 ## Best Practices
 
 1. **Always use `~kind`**: Provide descriptive kind names for better error messages
-2. **Use `skip_unknown` for external APIs**: Be tolerant of extra fields from third-party services
+2. **Use the default unknown-field behavior for external APIs**: Object maps skip unknown fields unless you opt into `error_unknown`
 3. **Prefer `opt_mem` with defaults**: Handle missing fields gracefully with `Option.value ~default:`
 4. **Compose small codecs**: Build complex structures from simple, reusable codecs
 5. **Define helper functions**: Create `decode`/`encode` helpers at module level for cleaner usage
