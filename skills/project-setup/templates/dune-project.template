@@ -2,8 +2,6 @@
 
 (name {{PROJECT_NAME}})
 
-(generate_opam_files true)
-
 (license {{LICENSE}})
 
 (authors "{{AUTHOR_NAME}} <{{AUTHOR_EMAIL}}>")
@@ -14,6 +12,8 @@
  (github {{GIT_ORG}}/{{PROJECT_NAME_KEBAB}}))
 
 (documentation https://{{GIT_ORG}}.github.io/{{PROJECT_NAME_KEBAB}})
+
+(generate_opam_files true)
 
 (package
  (name {{PROJECT_NAME}})

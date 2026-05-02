@@ -134,16 +134,18 @@ project/
 
 ```lisp
 (lang dune 3.22)
+
 (name project_name)
-(source (tangled handle/project_name))   ; or (github user/repo)
-(license ISC)
-(authors "Name <email>")
-(generate_opam_files true)
 
 (license ISC)
+
 (authors "Name <email@example.com>")
+
 (maintainers "Name <email@example.com>")
+
 (source (tangled user.domain/project_name))
+
+(generate_opam_files true)
 
 (package
  (name project_name)
