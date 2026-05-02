@@ -133,7 +133,7 @@ project/
 ## dune-project
 
 ```lisp
-(lang dune 3.21)
+(lang dune 3.22)
 (name project_name)
 (source (tangled handle/project_name))   ; or (github user/repo)
 (license ISC)
@@ -153,6 +153,10 @@ project/
   (ocaml (>= 5.2))
   (alcotest (and :with-test (>= 1.7.0)))))
 ```
+
+Use the lowest `(lang dune X.Y)` version that supports the project features you
+need. New projects can start from the current stable Dune language version, but
+existing projects should not bump this field without a reason.
 
 **Source options**:
 - `(source (tangled handle/repo))` - Tangled hosting (default for monopam)
