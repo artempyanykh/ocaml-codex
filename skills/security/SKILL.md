@@ -129,7 +129,9 @@ let test_entity_expansion () =
 
 ### Phase 3: Fuzz Testing
 
-Add fuzz tests for all parsers and encoders. See the **fuzz** skill for patterns.
+Add fuzz tests for all parsers and encoders. Use the **fuzz** skill for Crowbar
+project structure, generators, roundtrip patterns, and AFL campaign mechanics.
+This security phase only decides what needs fuzz coverage and why.
 
 **Priority targets:**
 1. Binary protocol parsers (highest risk)
@@ -138,24 +140,15 @@ Add fuzz tests for all parsers and encoders. See the **fuzz** skill for patterns
 4. Compression/decompression
 5. Character encoding conversions
 
-```ocaml
-(** Fuzz test: parser must not crash on any input. *)
-let test_decode_crash_safety buf =
-  let buf = truncate buf in
-  let _ = Parser.decode (to_bytes buf) in
-  ()
+For each target, record the security property before implementing the fuzz test:
 
-(** Fuzz test: encoder output must be parseable. *)
-let test_roundtrip buf =
-  let buf = truncate buf in
-  match Parser.decode (to_bytes buf) with
-  | Error _ -> ()
-  | Ok v ->
-      let encoded = Parser.encode v in
-      match Parser.decode encoded with
-      | Error _ -> fail "encoded data failed to parse"
-      | Ok v' -> if v <> v' then fail "roundtrip mismatch"
-```
+| Target | Security property |
+|--------|-------------------|
+| Parser | Arbitrary input never crashes or reads out of bounds |
+| Decoder/encoder pair | Valid decoded values round-trip without corruption |
+| Length-prefixed format | Length fields cannot trigger overflow or huge allocation |
+| State machine | Invalid transitions are rejected explicitly |
+| Compression | Decompression respects output and recursion limits |
 
 ### Phase 4: CVE Regression Tests
 
