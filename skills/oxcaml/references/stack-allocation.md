@@ -298,12 +298,13 @@ let bad () =
   f  (* Cannot return f - it contains local ref *)
 ```
 
-**Solution**: Use `let mutable` or ensure closure is also local:
+**Solution**: Avoid returning closures that capture locals. Use OxCaml
+`let mutable` for local mutation that does not allocate a `ref`, or ensure any
+closure that captures local data remains local too:
 
 ```ocaml
 let good () =
   let mutable x = 0 in
-  (* mutable variables don't create closures *)
   for i = 1 to 10 do x <- x + i done;
   x
 ```

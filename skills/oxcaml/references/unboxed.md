@@ -268,6 +268,10 @@ let result = process #3.14
 
 ### High-Performance Numeric Loop
 
+OxCaml's `let mutable` gives local mutable variables without allocating a
+heap `ref`, which is especially useful for unboxed accumulators whose layout is
+not `value`.
+
 ```ocaml
 let dot_product (a : float# array) (b : float# array) : float# =
   let len = Array.length a in
@@ -399,7 +403,7 @@ let modify (p : point) : point =
 ## Performance Tips
 
 1. **Use unboxed types in hot loops** - eliminates allocation
-2. **Prefer `let mutable` over `ref` for unboxed accumulators**
+2. **Prefer OxCaml `let mutable` over `ref` for unboxed accumulators**
 3. **Use unboxed arrays for numeric data**
 4. **Use `or_null` instead of `option` for nullable unboxed**
 5. **Use `[@unboxed]` on external declarations**

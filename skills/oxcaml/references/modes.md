@@ -1,6 +1,6 @@
 ---
 name: oxcaml-modes
-description: "OxCaml modal types for locality, uniqueness, linearity, portability, and contention tracking"
+description: "OxCaml modal types for locality, uniqueness, linearity, portability, contention, effects, and purity tracking"
 ---
 
 # OxCaml Modes: Detailed Guide
@@ -11,17 +11,24 @@ runtime overhead.
 
 ## Mode Axes Overview
 
-OxCaml has five independent mode axes:
+OxCaml has several independent mode axes. The most commonly used axes are
+locality, uniqueness, linearity, portability, and contention; newer OxCaml
+features also track forkability, yielding, visibility, and statefulness.
 
 | Axis | Modes | Tracks |
 |------|-------|--------|
 | Locality | `local` / `global` | Stack vs heap allocation |
 | Uniqueness | `unique` / `aliased` | Single vs multiple references |
 | Linearity | `once` / `many` | Closure invocation count |
-| Portability | `portable` / `shareable` / `nonportable` | Cross-thread safety |
+| Portability | `portable` / `nonportable` | Cross-thread safety |
 | Contention | `contended` / `shared` / `uncontended` | Concurrent access |
+| Forkability | `forkable` / `unforkable` | Access to shared parent-stack values |
+| Yielding | `yielding` / `unyielding` | Whether a function may perform handled effects |
+| Visibility | `immutable` / `read` / `read_write` | Access to mutable portions |
+| Statefulness | `stateful` / `observing` / `stateless` | Captured mutable state access |
 
-Each axis is independent - a value can be `local unique once` or `global aliased many`.
+Each axis is independent - a value can combine modes from different axes, such
+as `local unique once` or `global aliased many`.
 
 ---
 
@@ -100,7 +107,7 @@ Modes have a subtyping relationship. You can use a "stronger" mode where a
 Locality:    global ≤ local     (global values can be used as local)
 Uniqueness:  unique ≤ aliased   (unique values can be used as aliased)
 Linearity:   many ≤ once        (many closures can be used as once)
-Portability: portable ≤ shareable ≤ nonportable
+Portability: nonportable ≤ portable
 Contention:  uncontended ≤ shared ≤ contended
 ```
 
@@ -329,17 +336,17 @@ let good (r @ unique) =
 
 ---
 
-## Portability and Contention (Three-Way Axes)
+## Portability, Contention, Effects, and Purity
 
-The portability and contention axes now have three values each:
+These axes are mostly relevant for parallelism, effect handlers, and APIs that
+capture or expose mutable state.
 
 ### Portability Axis
 
 | Mode | Meaning |
 |------|---------|
 | `nonportable` | Functions capturing uncontended mutable state; cannot escape current thread |
-| `shareable` | Functions capturing shared state; may execute in parallel |
-| `portable` | Functions capturing all values at contended; may execute concurrently |
+| `portable` | Values permitted to move across thread boundaries |
 
 ### Contention Axis
 
@@ -349,13 +356,21 @@ The portability and contention axes now have three values each:
 | `shared` | Multi-thread access; synchronized sharing |
 | `contended` | Multi-thread concurrent access |
 
+### Effects and Purity Axes
+
+| Axis | Modes | Meaning |
+|------|-------|---------|
+| Forkability | `unforkable` / `forkable` | Whether a function may access shared values in its parent stack |
+| Yielding | `unyielding` / `yielding` | Whether a function may perform effects handled in its parent stack |
+| Visibility | `read_write` / `read` / `immutable` | Whether mutable portions may be read or written |
+| Statefulness | `stateless` / `observing` / `stateful` | Whether a function may read or write captured mutable state |
+
 ### Mode Implications
 
 Certain modalities imply others for soundness:
 
 - `@@ global` implies `@@ aliased` (for borrowing soundness)
 - `stateless` implies `portable`
-- `observing` implies `shareable`
 - `immutable` implies `contended`
 - `read` implies `shared`
 

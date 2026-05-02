@@ -234,9 +234,11 @@ let[@zero_alloc] process x =
 
 ### Zero-Alloc Hot Loop
 
+Use OxCaml's `let mutable` for local mutation without allocating a heap `ref`.
+
 ```ocaml
 let[@zero_alloc] sum_array arr =
-  let mutable total = 0 in  (* No allocation *)
+  let mutable total = 0 in  (* No heap allocation *)
   for i = 0 to Array.length arr - 1 do
     total <- total + arr.(i)
   done;
