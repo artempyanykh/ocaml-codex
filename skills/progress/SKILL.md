@@ -44,9 +44,9 @@ let process_items items =
     count_to total;
   ]) in
   with_reporter bar (fun report ->
-    List.iteri (fun i item ->
+    List.iter (fun item ->
       process_item item;
-      report (i + 1)
+      report 1
     ) items)
 ```
 
@@ -79,8 +79,8 @@ let download_line ~total message =
 let download ~url ~size =
   let bar = download_line ~total:(Int63.of_int size) "Downloading..." in
   with_reporter bar (fun report ->
-    fetch_with_progress url (fun bytes_read ->
-      report (Int63.of_int bytes_read)))
+    fetch_with_progress url (fun bytes_delta ->
+      report (Int63.of_int bytes_delta)))
 ```
 
 Output:
@@ -103,7 +103,7 @@ let multi_download files =
   with_reporters display (fun reporters ->
     (* Each reporter corresponds to one line *)
     List.iter2 (fun reporter file ->
-      download_file file (fun n -> reporter n)
+      download_file file (fun bytes_delta -> reporter bytes_delta)
     ) reporters files)
 ```
 
@@ -282,8 +282,8 @@ let download_files files =
       percentage_of size;
     ]) in
     let reporter = Display.add_line display bar in
-    download_file file (fun bytes ->
-      Reporter.report reporter (Int63.of_int bytes));
+    download_file file (fun bytes_delta ->
+      Reporter.report reporter (Int63.of_int bytes_delta));
     Reporter.finalise reporter
   ) files;
 

@@ -290,9 +290,9 @@ let with_progress ~total f =
 let process_files files =
   let total = List.length files in
   with_progress ~total (fun report ->
-    List.iteri (fun i file ->
+    List.iter (fun file ->
       process_file file;
-      report i
+      report 1
     ) files)
 ```
 
@@ -473,4 +473,3 @@ let cmd =
 - [ ] TTY detection (no colors when piped)
 - [ ] Verbosity via `-v` / `--verbosity` (Logs_cli)
 - [ ] Consistent with project conventions
-
