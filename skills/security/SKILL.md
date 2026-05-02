@@ -238,11 +238,14 @@ let fits_in_bits n v =
 
 (** Use in size calculations. *)
 let calculate_buffer_size ~width ~height ~bytes_per_pixel =
-  let open Result.Syntax in
-  let* row_size = safe_mul width bytes_per_pixel in
-  let* total = safe_mul row_size height in
-  if total > max_buffer_size then Error `Buffer_too_large
-  else Ok total
+  match safe_mul width bytes_per_pixel with
+  | Error _ as err -> err
+  | Ok row_size ->
+      match safe_mul row_size height with
+      | Error _ as err -> err
+      | Ok total ->
+          if total > max_buffer_size then Error `Buffer_too_large
+          else Ok total
 ```
 
 ### Safe Integer Narrowing
@@ -264,10 +267,11 @@ let int64_to_int n =
 
 (** Convert length field to int, rejecting values that don't fit. *)
 let length_field_to_int len_field =
-  let open Result.Syntax in
-  let* n = int64_to_int len_field in
-  if n < 0 then Error (`Invalid_length n)
-  else Ok n
+  match int64_to_int len_field with
+  | Error _ as err -> err
+  | Ok n ->
+      if n < 0 then Error (`Invalid_length n)
+      else Ok n
 ```
 
 ### Constant-Time Comparison

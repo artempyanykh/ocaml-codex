@@ -1,15 +1,18 @@
 ---
 name: result
-description: "OCaml Result type patterns using OCaml 5.x stdlib. Use when Codex needs to: (1) Handle errors with Result types, (2) Chain Result operations with let*, (3) Extract values from Ok/Error, (4) Refactor code using local let* bindings to use Result.Syntax"
+description: "OCaml Result type patterns using the stdlib. Use when Codex needs to: (1) Handle errors with Result types, (2) Chain Result operations with let* where the project baseline supports it, (3) Extract values from Ok/Error, (4) Refactor Result-heavy code without adding unnecessary local operators"
 ---
 
 # OCaml Result Patterns
 
-OCaml 5.x provides `Result.Syntax` for monadic chaining and `Result.get_ok`/`Result.get_error` for extraction.
+The OCaml stdlib provides `Result` helpers for explicit error handling. `Result.Syntax`
+is available in OCaml 5.4 and later; projects supporting OCaml 5.2 or 5.3 need a
+small compatibility module or explicit `Result.bind`/`match` code instead.
 
 ## Result.Syntax
 
-Use `open Result.Syntax` to get `let*` and `let+` bindings:
+For projects with `ocaml >= 5.4`, use `open Result.Syntax` to get `let*` and
+`let+` bindings:
 
 ```ocaml
 open Result.Syntax
@@ -21,14 +24,32 @@ let process request =
   execute req
 ```
 
-**DO NOT** define local `let ( let* ) = Result.bind`. Use `open Result.Syntax` instead.
+For projects that support OCaml 5.2 or 5.3, do not use `Result.Syntax`.
+Prefer explicit control flow for short chains:
+
+```ocaml
+let process request =
+  match validate request with
+  | Error _ as err -> err
+  | Ok req ->
+      match authenticate req with
+      | Error _ as err -> err
+      | Ok auth ->
+          match authorize auth with
+          | Error _ as err -> err
+          | Ok () -> execute req
+```
+
+If a project uses Result syntax pervasively while supporting OCaml < 5.4, define
+one project-local compatibility module and reuse it. Avoid scattered local
+definitions of `let ( let* ) = Result.bind`.
 
 ## Extracting Values
 
 | Function | Behavior on Error |
 |----------|-------------------|
 | `Result.get_ok r` | Raises `Invalid_argument` |
-| `Result.get_error r` | Raises `Invalid_argument` |
+| `Result.get_error r` | Raises `Invalid_argument` (OCaml >= 5.4) |
 | `Result.value r ~default` | Returns default |
 
 Use `Result.get_ok` only when failure is a programming error:

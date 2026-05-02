@@ -46,6 +46,10 @@ Prefer: `Option.map`, `Option.bind`, `Option.value`, `Result.map`, `Result.bind`
 
 ### Monadic Syntax (let*/let+)
 
+Use `Result.Syntax` only when the project baseline is OCaml 5.4 or later. For
+projects supporting OCaml 5.2 or 5.3, keep explicit matches for short chains or
+use one shared project-local compatibility module.
+
 ```ocaml
 (* Before - nested matches *)
 match fetch_user id with
