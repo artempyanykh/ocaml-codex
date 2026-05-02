@@ -161,7 +161,7 @@ let body = Eio.Buf_read.(of_flow ~max_size:10_000_000 flow |> take_all)
 **Mutex**:
 ```ocaml
 let mutex = Eio.Mutex.create ()
-Eio.Mutex.use_rw mutex (fun () -> shared_state := new_value)
+Eio.Mutex.use_rw ~protect:true mutex (fun () -> shared_state := new_value)
 ```
 
 **Semaphore for rate limiting**:
@@ -245,7 +245,7 @@ Errors use `Eio.Io (err, context)` with nested error codes:
 try
   Eio.Net.connect ~sw net addr
 with
-| Eio.Io (Eio.Net.E (Connection_failure _), _) ->
+| Eio.Io (Eio.Net.E (Eio.Net.Connection_failure _), _) ->
     (* Specific error *)
     Error `Connection_failed
 | Eio.Io (Eio.Net.E _, _) ->
@@ -328,7 +328,8 @@ let with_connection ~sw ~net addr f =
 **Bad**: No size limit allows memory exhaustion
 ```ocaml
 let read_body flow =
-  Eio.Buf_read.(of_flow flow |> take_all)  (* Unbounded! *)
+  let r = Eio.Buf_read.of_flow ~max_size:Int.max_int flow in
+  Eio.Buf_read.take_all r  (* Effectively unbounded! *)
 ```
 
 **Good**: Always specify max_size
@@ -370,10 +371,10 @@ let connect addr =
 let connect addr =
   try Eio.Net.connect ~sw net addr
   with
-  | Eio.Io (Eio.Net.E (Connection_failure reason), _) ->
+  | Eio.Io (Eio.Net.E (Eio.Net.Connection_failure (Eio.Net.Refused backend)), _) ->
+      Error (`Refused backend)
+  | Eio.Io (Eio.Net.E (Eio.Net.Connection_failure reason), _) ->
       Error (`Connection_failed reason)
-  | Eio.Io (Eio.Net.E Connection_refused, _) ->
-      Error `Refused
   | Eio.Io _ as exn ->
       Eio.Exn.reraise_with_context exn "connecting to %s" addr
 ```

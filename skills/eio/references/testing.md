@@ -28,7 +28,7 @@ Always end mock reads with `` `Raise End_of_file``. Otherwise the test may hang.
 
 ```ocaml
 let test_api_call () =
-  Eio_main.run @@ fun _env ->
+  Eio_mock.Backend.run @@ fun () ->
   let flow = Eio_mock.Flow.make "response" in
   Eio_mock.Flow.on_read flow [
     `Return "{\"ok\": true}";
@@ -41,7 +41,7 @@ let test_api_call () =
 
 ```ocaml
 let test_partial_reads () =
-  Eio_main.run @@ fun _env ->
+  Eio_mock.Backend.run @@ fun () ->
   let flow = Eio_mock.Flow.make "chunked" in
   Eio_mock.Flow.on_read flow [
     `Return "\x00\x01";
@@ -55,7 +55,7 @@ let test_partial_reads () =
 
 ```ocaml
 let test_network () =
-  Eio_main.run @@ fun _env ->
+  Eio_mock.Backend.run @@ fun () ->
   let net = Eio_mock.Net.make "mocknet" in
   let flow = Eio_mock.Flow.make "conn" in
   Eio_mock.Net.on_connect net [`Return flow];
@@ -73,7 +73,7 @@ let test_network () =
 
 ```ocaml
 let test_read () =
-  Eio_main.run @@ fun _env ->
+  Eio_mock.Backend.run @@ fun () ->
   let flow = Eio_mock.Flow.make "test" in
   Eio_mock.Flow.on_read flow [
     `Return "data";
@@ -86,7 +86,7 @@ let test_read () =
 
 ```ocaml
 let test_read () =
-  Eio_main.run @@ fun _env ->
+  Eio_mock.Backend.run @@ fun () ->
   let flow = Eio_mock.Flow.make "test" in
   Eio_mock.Flow.on_read flow [
     `Return "data";
