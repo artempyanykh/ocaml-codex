@@ -38,18 +38,38 @@ This repository is a Codex plugin root. The plugin manifest lives at
 The plugin id is `ocaml-codex`. The human-readable name shown in Codex is
 `OCaml Development`.
 
-### Install as a Local Codex Plugin
+### Install from the Marketplace File
 
-These steps install this checkout as a personal local plugin. The important
-Codex-specific pieces are:
+This repository includes a Codex marketplace file at
+`.agents/plugins/marketplace.json`. The marketplace exposes this plugin through
+`./plugins/ocaml-codex`, which is a symlink back to the repository root.
 
-- `~/.agents/plugins/marketplace.json` declares the local plugin marketplace.
+1. In Codex, open `/plugin`.
+
+2. Choose **Add marketplace**.
+
+3. Add this repository as the marketplace source:
+
+   ```text
+   https://github.com/artempyanykh/ocaml-codex
+   ```
+
+4. Select the `OCaml Codex` marketplace.
+
+5. Install `OCaml Development`.
+
+### Local Development Install
+
+Use this flow when you want Codex to load your local checkout through a personal
+marketplace instead of adding this repository as a marketplace source.
+
+The important Codex-specific pieces are:
+
+- `~/.agents/plugins/marketplace.json` declares your personal local marketplace.
 - `~/.codex/plugins/ocaml-codex` points at this plugin checkout.
 - `source.path` in the marketplace is relative to your home directory.
 
-1. Clone or keep this repository somewhere stable.
-
-2. Create the local plugin directory and symlink this checkout into it. Replace
+1. Create the local plugin directory and symlink this checkout into it. Replace
    `<repo>` with the path to this repository.
 
    ```bash
@@ -57,13 +77,13 @@ Codex-specific pieces are:
    ln -sfn <repo> ~/.codex/plugins/ocaml-codex
    ```
 
-3. Create the personal marketplace directory.
+2. Create the personal marketplace directory.
 
    ```bash
    mkdir -p ~/.agents/plugins
    ```
 
-4. Create `~/.agents/plugins/marketplace.json` with this exact content.
+3. Create `~/.agents/plugins/marketplace.json` with this exact content.
 
    ```json
    {
@@ -92,10 +112,10 @@ Codex-specific pieces are:
    `./.codex/plugins/ocaml-codex` resolves to
    `~/.codex/plugins/ocaml-codex`.
 
-5. Restart Codex.
+4. Restart Codex.
 
-6. Open `/plugin`, select the `Local Plugins` marketplace, and install
-   `ocaml-codex`.
+5. Open `/plugin`, select the `Local Plugins` marketplace, and install
+   `OCaml Development`.
 
 ### Troubleshooting
 
