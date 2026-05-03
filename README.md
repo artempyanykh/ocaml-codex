@@ -35,8 +35,83 @@ performance extensions.
 This repository is a Codex plugin root. The plugin manifest lives at
 `.codex-plugin/plugin.json` and points Codex at `./skills/`.
 
-For local development, place or clone this repository where Codex can load local
-plugins, then install or enable the `ocaml-dev` plugin from that location.
+The plugin id is `ocaml-codex`. The human-readable name shown in Codex is
+`OCaml Development`.
+
+### Install as a Local Codex Plugin
+
+These steps install this checkout as a personal local plugin. The important
+Codex-specific pieces are:
+
+- `~/.agents/plugins/marketplace.json` declares the local plugin marketplace.
+- `~/.codex/plugins/ocaml-codex` points at this plugin checkout.
+- `source.path` in the marketplace is relative to your home directory.
+
+1. Clone or keep this repository somewhere stable.
+
+2. Create the local plugin directory and symlink this checkout into it. Replace
+   `<repo>` with the path to this repository.
+
+   ```bash
+   mkdir -p ~/.codex/plugins
+   ln -sfn <repo> ~/.codex/plugins/ocaml-codex
+   ```
+
+3. Create the personal marketplace directory.
+
+   ```bash
+   mkdir -p ~/.agents/plugins
+   ```
+
+4. Create `~/.agents/plugins/marketplace.json` with this exact content.
+
+   ```json
+   {
+     "name": "local",
+     "interface": {
+       "displayName": "Local Plugins"
+     },
+     "plugins": [
+       {
+         "name": "ocaml-codex",
+         "source": {
+           "source": "local",
+           "path": "./.codex/plugins/ocaml-codex"
+         },
+         "policy": {
+           "installation": "AVAILABLE",
+           "authentication": "ON_INSTALL"
+         },
+         "category": "Productivity"
+       }
+     ]
+   }
+   ```
+
+   The `source.path` value is relative to your home directory, so
+   `./.codex/plugins/ocaml-codex` resolves to
+   `~/.codex/plugins/ocaml-codex`.
+
+5. Restart Codex.
+
+6. Open `/plugin`, select the `Local Plugins` marketplace, and install
+   `ocaml-codex`.
+
+### Troubleshooting
+
+- If the plugin appears in `/plugin` but installation fails with
+  `Plugin detail unavailable` or `plugin/install failed in TUI`, check:
+
+  ```bash
+  tail -n 80 ~/.codex/log/codex-tui.log
+  ```
+
+- If Codex cannot find the plugin details, verify the symlink:
+
+  ```bash
+  ls -la ~/.codex/plugins/ocaml-codex
+  test -f ~/.codex/plugins/ocaml-codex/.codex-plugin/plugin.json
+  ```
 
 ## Attribution
 

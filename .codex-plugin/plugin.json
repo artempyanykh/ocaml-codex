@@ -1,5 +1,5 @@
 {
-  "name": "ocaml-dev",
+  "name": "ocaml-codex",
   "version": "0.1.0",
   "description": "Codex skills for OCaml, Dune, Eio, OxCaml, testing, documentation, security hardening, and release workflows.",
   "author": {
@@ -16,5 +16,8 @@
   "homepage": "https://github.com/artempyanykh/ocaml-codex",
   "repository": "https://github.com/artempyanykh/ocaml-codex",
   "license": "ISC",
-  "skills": "./skills/"
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "OCaml Development"
+  }
 }
