@@ -17,6 +17,9 @@ description: "OCaml development guidance for building robust, type-safe applicat
 
 - **Build**: Use `dune` exclusively
 - **Formatting**: Run `dune fmt` before committing (uses ocamlformat)
+- **Tests**: Use assertion-style inline tests for predicates and roundtrips;
+  reserve expect tests for meaningful output/transcripts whose exact text is
+  the reviewed contract.
 - **Common Libraries**:
   - Concurrency: `eio`
   - Structured output: `fmt`

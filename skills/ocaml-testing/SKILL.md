@@ -34,6 +34,13 @@ libraries do not need a hand-written `test.ml` runner. Conversely, when a
 project already uses Alcotest, preserve the runner/suite organization unless
 there is a clear reason to migrate.
 
+Before adding an expect test, ask whether the printed output is itself the
+reviewed contract. If the test only prints `true`, `false`, `Ok`, or another
+throwaway assertion result, use `let%test` or `let%test_unit` instead. Expect
+tests are for meaningful transcripts: pretty-printer output, diagnostics,
+parser/conformance reports, CLI-like output, or other text whose exact shape
+should be reviewed and promoted.
+
 ## Dune Inline Tests
 
 Inline tests live in libraries, including test-only libraries under `test/`.
