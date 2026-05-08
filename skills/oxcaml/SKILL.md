@@ -40,6 +40,7 @@ val g : t @ global -> t @ local
 let x : float# = #3.14
 let y : int32# = #42l
 type sample = { tag : int; value : float# }
+type point = { x : int; y : int }  (* also provides point# *)
 
 (* Kinds *)
 type ('a : float64) vector = ...
@@ -68,6 +69,8 @@ let[@zero_alloc] fast_add x y = x + y
 - Prefer standard OCaml unless an OxCaml feature provides a concrete allocation, layout, parallelism, or API-safety benefit.
 - Treat locality and uniqueness errors as design feedback, not as syntax issues to work around.
 - Keep public interfaces explicit about modes and kinds when callers depend on them.
+- Prefer an ordinary boxed record when callers need both boxed and unboxed forms;
+  eligible boxed records automatically provide an implicit unboxed `t#` type.
 - Add `[@zero_alloc]` only when the implementation and called functions can satisfy it; verify with the compiler rather than assuming.
 - Benchmark and inspect allocation behaviour before and after performance-oriented changes.
 

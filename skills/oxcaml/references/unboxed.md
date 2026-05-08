@@ -44,7 +44,7 @@ let b : int32# = Int32_u.of_int32 42l
 
 ## Unboxed Records
 
-Records with all unboxed fields are stored flat without indirection:
+Unboxed records are stored flat without indirection:
 
 ```ocaml
 (* Unboxed record syntax: #{ } *)
@@ -63,6 +63,28 @@ let magnitude #{ x; y; z } =
       (Float_u.add (Float_u.mul y y) (Float_u.mul z z))
   )
 ```
+
+### Implicit Unboxed Records
+
+Eligible boxed record declarations automatically provide a matching unboxed
+record type named with a `#` suffix. Prefer this form when an API benefits from
+both the normal boxed representation and an allocation-free product
+representation with the same fields.
+
+```ocaml
+type point = { x : int; y : int }
+
+let box (p : point#) : point =
+  let #{ x; y } = p in
+  { x; y }
+
+let unbox (p : point) : point# =
+  #{ x = p.x; y = p.y }
+```
+
+Implicit `t#` records are not generated for records that use the flat-float
+record representation (all-`float` records and `float`/`float#` records), or for
+records declared with `[@@unboxed]`.
 
 ### Unboxed Record Characteristics
 

@@ -167,6 +167,7 @@ type crosser : value mod global local
 (* Immutable record with value fields *)
 type point = { x : int; y : int }
 (* Kind: immutable_data with x, y *)
+(* Also declares point# with kind immediate & immediate mod everything *)
 
 (* Mutable record *)
 type counter = { mutable count : int }
