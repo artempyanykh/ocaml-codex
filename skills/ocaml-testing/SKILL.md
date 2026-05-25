@@ -41,6 +41,10 @@ tests are for meaningful transcripts: pretty-printer output, diagnostics,
 parser/conformance reports, CLI-like output, or other text whose exact shape
 should be reviewed and promoted.
 
+Avoid tests that only restate the behavior of upstream libraries or compiler
+primitives through a thin wrapper. Prefer tests for local contracts, boundary
+handling, composition, and invariants the project owns.
+
 ## Dune Inline Tests
 
 Inline tests live in libraries, including test-only libraries under `test/`.
@@ -349,6 +353,11 @@ including success, error, and edge cases.
 ```ocaml
 let make_user ?(name = "test") ?(id = 1) () = User.v ~name ~id
 ```
+
+For repeated fixture construction, extract small helpers at the nearest shared
+test scope. If all tests already live inside one `module%test`, put the helpers
+directly at that module's top level rather than adding an unnecessary nested
+`Test_helpers` module.
 
 **Failure quality**: Failures should identify the broken case or fixture, not
 only the larger suite.

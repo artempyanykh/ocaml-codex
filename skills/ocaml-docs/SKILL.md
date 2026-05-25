@@ -11,6 +11,17 @@ Use this skill when fixing odoc documentation warnings, typically from `dune bui
 
 **Prerequisites:** This skill focuses on odoc v3 reference syntax. This requires recently released versions of odoc and dune.
 
+## Interface Comment Quality
+
+Public `.mli` comments should explain non-obvious semantics, caller obligations,
+and why a helper exists. Avoid documenting self-evident wrappers or leaking a
+private implementation strategy into the public contract.
+
+For low-level helpers, describe the use case in domain terms. For example, a
+SIMD byte-shift helper might say it provides previous-byte context needed to
+validate multi-byte UTF-8 sequences across vector or block boundaries, rather
+than naming the specific intrinsic used internally.
+
 ## Reference Syntax
 
 Use path-based disambiguation `{!Path.To.kind-Name}` rather than `{!kind:Path.To.Name}`:

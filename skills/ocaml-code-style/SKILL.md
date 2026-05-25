@@ -30,6 +30,10 @@ description: "OCaml coding style and refactoring patterns. Use when the user ask
 
 **Avoid**: Long names with many underscores (`get_user_profile_data_from_database_by_id`).
 
+For test and fixture helpers, make the constructed value clear from the name.
+Prefer `create_*` names for constructors such as `create_incrementing_bytes` or
+`create_single_nonzero_lane` over ambiguous names like `lane_from` or `one_at`.
+
 ## Refactoring Patterns
 
 ### Option/Result Combinators
@@ -93,6 +97,11 @@ let check x y z =
 let all_positive x y z = x > 0 && y > 0 && z > 0
 let check x y z = if not (all_positive x y z) then "invalid" else ...
 ```
+
+Avoid unnecessary local aliases for functions or operators that are clearer at
+the call site. For module-scoped operators, prefer a local open around the
+expression, for example `Int8x16.(left lor right)`, rather than rebinding the
+operator with `let ( || ) = Int8x16.( lor )`.
 
 ## Error Handling
 
